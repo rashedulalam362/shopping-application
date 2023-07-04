@@ -2,6 +2,7 @@
 const productsEl = document.querySelector(".card");
 const cartItemEl=document.querySelector('.table')
 const subtotalEl = document.querySelector(".subtotal");
+// const totalItemsInCartEl = document.querySelector(".subtotal");
 
 function renderProdcuts (){
 
@@ -61,7 +62,7 @@ function updateCart(){
           <th>Product</th>
           <th>Price</th>
           <th>Quantity</th>
-          <th>Total</th>
+        
         </tr>
       </thead>
       <tbody>
@@ -74,9 +75,11 @@ function updateCart(){
               <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary" onclick="changeUnite('minus',${item.id})" type="button" id="minus-btn">-</button>
               </div>
-              <input type="text" class="form-control" value="1" id="quantity" readonly ,${item.numberOfUnits}>
+              <div  style="height: 1px;
+              background-color: #ccc;
+              margin: 10px 0;">${item.numberOfUnits}</div>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" onclick="changeUnite('plus',${item.id})" type="button" id="plus-btn">+</button>
+                <button  onclick="changeUnite('plus',${item.id})" type="button" id="plus-btn">+</button>
               </div>
             </div>
           </td>
@@ -84,7 +87,7 @@ function updateCart(){
         </tr>
         <!-- Add more rows for other products -->
       </tbody>
-      <button onclick="removeCarItem(${item.id})" >Remove button</button>
+      <button class="btn btn-danger" onclick="removeCarItem(${item.id})" >Remove button</button>
         
         `
     })
@@ -102,6 +105,34 @@ function renderSubTotal(){
     })
 
     subtotalEl.innerHTML=`Subtotal (${totalItems} items): $${totalPrice.toFixed(2)}`
-    totalItemsInCartEl.innerHTML=totalItems;
+    // totalItemsInCartEl.innerHTML=totalItems;
 
+}// change number of units for an item
+ // Initialize the cart variable as an empty array
+
+
+ function changeUnite(action, id) {
+    cart = cart.map((item) => {
+      let numberOfUnits = item.numberOfUnits;
+      if (item.id === id) {
+        if (action === 'minus' && numberOfUnits > 1 ) {
+          numberOfUnits--;
+        }
+        if (action === 'plus' && numberOfUnits < item.instock ) {
+          numberOfUnits++;
+        }
+      }
+      return {
+        ...item,
+        numberOfUnits,
+      };
+    });
+  
+    updateCart(cart);
+  }
+
+//remove cart 
+  function removeCarItem(id){
+    cart=cart.filter((item)=> item.id != id)
+    updateCart()
 }
